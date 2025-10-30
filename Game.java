@@ -115,6 +115,9 @@ public class Game
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
         }
+        else if (commandWord.equals("details")){
+            CommandWords.commandDetails();
+        }
         // else command not recognised.
         return wantToQuit;
     }

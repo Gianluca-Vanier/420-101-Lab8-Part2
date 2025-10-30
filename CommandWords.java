@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Collections;
+
 /**
  * This class is part of the "World of Zuul" application. 
  * "World of Zuul" is a very simple, text based adventure game.
@@ -13,7 +16,11 @@ public class CommandWords
 {
     // A constant array that holds all valid command words.
     private static final String[] validCommands = {
-        "go", "quit", "help"
+        "go", "quit", "help", "details"
+    };
+    
+    private static final String[] validSubCommands = {
+        "east", "west", "south", "north"
     };
 
     /**
@@ -21,7 +28,7 @@ public class CommandWords
      */
     public CommandWords()
     {
-        // nothing to do at the moment...
+
     }
 
     /**
@@ -42,11 +49,24 @@ public class CommandWords
     /**
      * Print all valid commands to System.out.
      */
-    public void showAll() 
+    public String showAll() 
     {
+        ArrayList<String> al = new ArrayList();
         for(String command: validCommands) {
-            System.out.print(command + "  ");
+            al.add(command);
         }
-        System.out.println();
+        Collections.sort(al);
+        return al.toString().trim();
+    }
+    
+    public static void commandDetails(){
+        for(String command: validCommands){
+            System.out.println(command);
+            if(command == "go"){
+                for(String subCommand: validSubCommands){
+                    System.out.println(subCommand);
+                }
+            }
+        }
     }
 }
