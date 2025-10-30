@@ -24,3 +24,7 @@ The goal is to extend the game:
   - (anything you can think of, really...)
 
 Read chapter 8 of the book to get a detailed description of the project.
+
+QUESTIONS
+
+22. model-view-controller helps with orgranizing data, user interface 
