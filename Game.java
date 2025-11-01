@@ -28,20 +28,17 @@ public class Game
         parser = new Parser();
     }
 
-    /**
-     * Create all the rooms and link their exits together.
-     */
     private void createRooms()
     {
         Room outside, theater, pub, lab, office;
-
+    
         // create the rooms
         outside = new Room("outside the main entrance of the university");
         theater = new Room("in a lecture theater");
         pub = new Room("in the campus pub");
         lab = new Room("in a computing lab");
         office = new Room("in the computing admin office");
-
+    
         // initialise room exits
         outside.setExit("east", theater);
         outside.setExit("south", lab);
@@ -51,14 +48,16 @@ public class Game
         lab.setExit("north", outside);
         lab.setExit("east", office);
         office.setExit("west", lab);
-
-        // create and assign items
-        outside.setItem(new Item("a shiny key", 0.1));
-        theater.setItem(new Item("a dusty book", 1.5));
-        pub.setItem(new Item("a frothy mug of ale", 0.8));
-        lab.setItem(new Item("a mysterious USB stick", 0.05));
-        office.setItem(new Item("a pile of old papers", 2.0));
-
+    
+        // add items
+        outside.addItem(new Item("a shiny key", 0.1));
+        outside.addItem(new Item("a newspaper", 0.2));
+        theater.addItem(new Item("a dusty book", 1.5));
+        pub.addItem(new Item("a frothy mug of ale", 0.8));
+        lab.addItem(new Item("a mysterious USB stick", 0.05));
+        lab.addItem(new Item("a screwdriver", 0.3));
+        office.addItem(new Item("a pile of old papers", 2.0));
+    
         currentRoom = outside;  // start game outside
     }
 

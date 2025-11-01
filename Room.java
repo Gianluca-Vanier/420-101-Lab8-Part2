@@ -1,5 +1,6 @@
 import java.util.Set;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * Class Room - a room in an adventure game.
@@ -19,18 +20,19 @@ public class Room
     private String description;
     // stores exits of this room.
     private HashMap<String, Room> exits;
-    private Item item;
+    private ArrayList<Item> items;
 
     /**
      * Create a room described "description". Initially, it has no exits. 
      * "description" is something like "a kitchen" or "an open court yard".
      * @param description The room's description.
      */
-    public Room(String description) 
-    {
-        this.description = description;
-        exits = new HashMap<>();
-    }
+   public Room(String description)
+{
+    this.description = description;
+    exits = new HashMap<>();
+    items = new ArrayList<>();
+}
 
     /**
      * Define an exit from this room.
@@ -109,5 +111,45 @@ public class Room
 
         return description;
     }
+    /**
+ * Add an item to this room.
+ * @param item The item to be added.
+ */
+public void addItem(Item item)
+{
+    items.add(item);
+}
+
+/**
+ * @return A list of items in this room.
+ */
+public ArrayList<Item> getItems()
+{
+    return items;
+}
+
+/**
+ * @return A string describing all the items in this room.
+ */
+private String getItemString()
+{
+    if (items.isEmpty()) {
+        return "There are no items here.";
+    }
+
+    StringBuilder sb = new StringBuilder("You see the following items here:");
+    for (Item item : items) {
+        sb.append("\n - ").append(item.getLongDescription());
+    }
+    return sb.toString();
+}
+
+/**
+ * @return A long description of this room, including its exits and items.
+ */
+public String getLongDescription()
+{
+    return "You are " + description + ".\n" + getExitString() + "\n" + getItemString();
+}
 }
 
