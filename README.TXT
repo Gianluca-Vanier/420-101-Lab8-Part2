@@ -27,4 +27,5 @@ Read chapter 8 of the book to get a detailed description of the project.
 
 QUESTIONS
 
-22. model-view-controller helps with orgranizing data, user interface 
+22. model-view-controller helps with orgranizing data, user interface. If used in this project, it would help with creating a gui.
+24. The Item class should have a method like getLongDescription() which should be called in Room class when the room description is built.
