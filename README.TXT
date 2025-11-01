@@ -29,3 +29,7 @@ QUESTIONS
 
 22. model-view-controller helps with orgranizing data, user interface. If used in this project, it would help with creating a gui.
 24. The Item class should have a method like getLongDescription() which should be called in Room class when the room description is built.
+27. Yes it works as intended. It does not make a difference whether there is a second word or not, the code runs regardless.
+28. It recognizes that there is no previous room (if there is none).
+
+

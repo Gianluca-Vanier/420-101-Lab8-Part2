@@ -101,7 +101,7 @@ public class Game {
         String commandWord = command.getCommandWord();
         // Process the player's command
 
-        if (command.equals("back")) {
+        if (commandWord.equals("back")) {
             goBack();
         } else if (commandWord.equals("help")) {
             printHelp();
@@ -136,7 +136,7 @@ public class Game {
     }
 
     /** 
-     * Try to in to one direction. If there is an exit, enter the new
+     * Try to go in one direction. If there is an exit, enter the new
      * room, otherwise print an error message.
      */
     private void goRoom(Command command) 
@@ -149,24 +149,20 @@ public class Game {
 
         String direction = command.getSecondWord();
 
-        // Try to leave current room.
+        // Store the current room as the previous room before moving
+        if (currentRoom != null) {
+            previousRoom = currentRoom;  // Store the current room before moving
+        }
+
+        // Try to leave the current room.
         Room nextRoom = currentRoom.getExit(direction);
 
         if (nextRoom == null) {
             System.out.println("There is no door!");
-        }
-        else {
+        } else {
             currentRoom = nextRoom;
             System.out.println(currentRoom.getLongDescription());
         }
-    }
-    
-    public void goRoom(Room room) {
-        if (currentRoom != null) {
-            previousRoom = currentRoom;  // Store the current room before moving
-        }
-        currentRoom = room;
-        System.out.println(currentRoom.getLongDescription());
     }
 
     /** 
