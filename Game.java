@@ -14,32 +14,23 @@
  * @author  Michael Kölling and David J. Barnes
  * @version 7.1
  */
-public class Game 
-{
+public class Game {
     private Parser parser;
     private Room currentRoom;
-        
-    /**
-     * Create the game and initialise its internal map.
-     */
-    public Game() 
-    {
+    private Room previousRoom;  // Track the previous room
+
+    public Game() {
         createRooms();
         parser = new Parser();
     }
 
-    private void createRooms()
-    {
-        Room outside, theater, pub, lab, office;
-    
-        // create the rooms
-        outside = new Room("outside the main entrance of the university");
-        theater = new Room("in a lecture theater");
-        pub = new Room("in the campus pub");
-        lab = new Room("in a computing lab");
-        office = new Room("in the computing admin office");
-    
-        // initialise room exits
+    private void createRooms() {
+        Room outside = new Room("outside the main entrance of the university");
+        Room theater = new Room("in a lecture theater");
+        Room pub = new Room("in the campus pub");
+        Room lab = new Room("in a computing lab");
+        Room office = new Room("in the computing admin office");
+
         outside.setExit("east", theater);
         outside.setExit("south", lab);
         outside.setExit("west", pub);
@@ -48,8 +39,8 @@ public class Game
         lab.setExit("north", outside);
         lab.setExit("east", office);
         office.setExit("west", lab);
-    
-        // add items
+
+        // Add items to rooms
         outside.addItem(new Item("a shiny key", 0.1));
         outside.addItem(new Item("a newspaper", 0.2));
         theater.addItem(new Item("a dusty book", 1.5));
@@ -57,8 +48,9 @@ public class Game
         lab.addItem(new Item("a mysterious USB stick", 0.05));
         lab.addItem(new Item("a screwdriver", 0.3));
         office.addItem(new Item("a pile of old papers", 2.0));
-    
-        currentRoom = outside;  // start game outside
+
+        currentRoom = outside;  // Start the game outside
+        previousRoom = null;    // No previous room at the start
     }
 
     /**
@@ -107,7 +99,11 @@ public class Game
         }
 
         String commandWord = command.getCommandWord();
-        if (commandWord.equals("help")) {
+        // Process the player's command
+
+        if (command.equals("back")) {
+            goBack();
+        } else if (commandWord.equals("help")) {
             printHelp();
         }
         else if (commandWord.equals("go")) {
@@ -164,6 +160,14 @@ public class Game
             System.out.println(currentRoom.getLongDescription());
         }
     }
+    
+    public void goRoom(Room room) {
+        if (currentRoom != null) {
+            previousRoom = currentRoom;  // Store the current room before moving
+        }
+        currentRoom = room;
+        System.out.println(currentRoom.getLongDescription());
+    }
 
     /** 
      * "Quit" was entered. Check the rest of the command to see
@@ -179,6 +183,16 @@ public class Game
         else {
             // signal that we want to quit
             return true;  
+        }
+    }
+        
+    private void goBack() {
+        if (previousRoom != null) {
+            System.out.println("You go back to the " + previousRoom.getShortDescription() + ".");
+            currentRoom = previousRoom;
+            previousRoom = null;  // Reset the previous room after moving back
+        } else {
+            System.out.println("You cannot go back. There is no previous room.");
         }
     }
 }
