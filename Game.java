@@ -14,14 +14,17 @@
  * @author  Michael Kölling and David J. Barnes
  * @version 7.1
  */
+import java.util.Stack;
+
 public class Game {
     private Parser parser;
     private Room currentRoom;
-    private Room previousRoom;  // Track the previous room
+    private Stack<Room> roomHistory;  // Stack to store history of rooms
 
     public Game() {
         createRooms();
         parser = new Parser();
+        roomHistory = new Stack<>();  // Initialize the stack
     }
 
     private void createRooms() {
@@ -50,7 +53,6 @@ public class Game {
         office.addItem(new Item("a pile of old papers", 2.0));
 
         currentRoom = outside;  // Start the game outside
-        previousRoom = null;    // No previous room at the start
     }
 
     /**
@@ -92,34 +94,43 @@ public class Game {
     private boolean processCommand(Command command) 
     {
         boolean wantToQuit = false;
-
-        if(command.isUnknown()) {
+    
+        if (command.isUnknown()) {
             System.out.println("I don't know what you mean...");
             return false;
         }
-
+    
         String commandWord = command.getCommandWord();
-        // Process the player's command
-
-        if (commandWord.equals("back")) {
-            goBack();
-        } else if (commandWord.equals("help")) {
-            printHelp();
+    
+        // Switch statement for processing commands
+        switch (commandWord) {
+            case "back":
+                goBack();
+                break;
+            case "help":
+                printHelp();
+                break;
+            case "go":
+                goRoom(command);
+                break;
+            case "quit":
+                wantToQuit = quit(command);
+                break;
+            case "details":
+                CommandWords.commandDetails();
+                break;
+            default:
+                // If the command is not recognized, print this message
+                System.out.println("Command not recognized.");
+                System.out.println("Your command words are:");
+                parser.showCommands();  // Display the available commands
+                break;
         }
-        else if (commandWord.equals("go")) {
-            goRoom(command);
-        }
-        else if (commandWord.equals("quit")) {
-            wantToQuit = quit(command);
-        }
-        else if (commandWord.equals("details")){
-            CommandWords.commandDetails();
-        }
-        // else command not recognised.
+    
         return wantToQuit;
     }
 
-    // implementations of user commands:
+
 
     /**
      * Print out some help information.
@@ -149,17 +160,13 @@ public class Game {
 
         String direction = command.getSecondWord();
 
-        // Store the current room as the previous room before moving
-        if (currentRoom != null) {
-            previousRoom = currentRoom;  // Store the current room before moving
-        }
-
         // Try to leave the current room.
         Room nextRoom = currentRoom.getExit(direction);
 
         if (nextRoom == null) {
             System.out.println("There is no door!");
         } else {
+            roomHistory.push(currentRoom);  // Push the current room onto the stack
             currentRoom = nextRoom;
             System.out.println(currentRoom.getLongDescription());
         }
@@ -181,14 +188,14 @@ public class Game {
             return true;  
         }
     }
-        
+
     private void goBack() {
-        if (previousRoom != null) {
-            System.out.println("You go back to the " + previousRoom.getShortDescription() + ".");
-            currentRoom = previousRoom;
-            previousRoom = null;  // Reset the previous room after moving back
+        if (!roomHistory.isEmpty()) {
+            currentRoom = roomHistory.pop();  // Pop the last room from the stack
+            System.out.println("You go back to the " + currentRoom.getShortDescription() + ".");
+            System.out.println(currentRoom.getLongDescription());
         } else {
-            System.out.println("You cannot go back. There is no previous room.");
+            System.out.println("You cannot go back. You are at the beginning of your journey.");
         }
     }
 }
